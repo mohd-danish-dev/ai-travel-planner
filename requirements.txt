@@ -19,6 +19,7 @@ python-dotenv
 pycountry
 
 # --- backend (src/backend) ---
+currency-codes
 fastapi
 uvicorn[standard]
 langchain-ollama

@@ -22,9 +22,8 @@ React app, a CLI, or a Slack bot without changing a single line in
 - **Sources & tools used** — an expander under each assistant reply
   showing which knowledge-base sources and/or MCP tools contributed to
   that answer, from the `sources` / `tools_called` fields the backend
-  returns. This is what satisfies the assignment's "tool selection by
-  intent" transparency requirement — the user can see *why* an answer
-  looks the way it does.
+  returns. This gives the user visibility into *why* an answer looks the
+  way it does — which knowledge-base sources and/or tools it drew on.
 
 ## Run it
 

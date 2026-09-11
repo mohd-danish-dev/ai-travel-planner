@@ -43,7 +43,6 @@ before a second LLM call synthesizes the final answer — labeled as
 **Knowledge Base Facts**, **Live Data**, or **AI Recommendations** so
 it's always clear what's grounded fact versus model-generated suggestion.
 
-Full design rationale: [docs/architecture.md](docs/architecture.md).
 Deep dives per component, including bugs found and fixed along the way,
 live in each package's own README (linked in
 [Project structure](#project-structure) below).
@@ -66,7 +65,7 @@ Things `pip install` can't do for you:
 
 ```bash
 # 1. Create and activate a virtual environment
-python3 -m venv .venv
+python -m venv .venv
 source .venv/bin/activate        # Windows: .venv\Scripts\activate
 
 # 2. Install dependencies
@@ -83,6 +82,13 @@ cp .env.example .env
 
 ## Running it
 
+> Each new terminal starts without the virtual environment active. Before
+> running any command below in a fresh terminal or after `cd`-ing into a
+> different directory, activate it first:
+> ```bash
+> source .venv/bin/activate   # run from the repo root; adjust the path otherwise
+> ```
+
 Run these from the repo root, in order. The first two build the
 knowledge base (skip them only if `data/raw/` and `data/vector_store/`
 are already populated):
@@ -95,10 +101,12 @@ python scripts/scrape.py
 python scripts/ingest.py
 
 # 3. Start the backend (terminal 1)
+source .venv/bin/activate
 cd src/backend
 uvicorn main:app --port 8000
 
 # 4. Start the UI (terminal 2, from repo root)
+source .venv/bin/activate
 cd src/ui
 streamlit run app.py
 ```
@@ -125,7 +133,6 @@ python scripts/test_mcp_servers.py  # test both MCP tools directly, no LLM
 | [`src/backend/`](src/backend/README.md) | FastAPI service: intent routing, RAG retrieval, MCP tool calls, answer synthesis |
 | [`src/ui/`](src/ui/README.md) | Streamlit chat client — a thin HTTP client with zero app logic |
 | `data/` | `raw/` (scraped docs) and `vector_store/` (FAISS index) — both generated, gitignored |
-| [`docs/architecture.md`](docs/architecture.md) | Original design/planning document |
 
 Every package folder above has its own README going deeper into *why*
 it's built the way it is, including real bugs hit during development

@@ -52,15 +52,14 @@ free, and small was the whole point of this stack, so instead:
   context Python already assembled — no tool-calling needed here at all.
 
 This is a manual, explicit version of what an "agent" does, and is more
-predictable to debug and grade than trusting a 3.8B model's function-call
-output.
+predictable to debug than trusting a 3.8B model's function-call output.
 
 ## Session memory
 A plain `dict[session_id -> list of messages]` in `memory.py`. This is a
-deliberate POC simplification — it resets on server restart and wouldn't
-work across multiple backend processes — but keeps a real database out of
-scope for a local demo. Swapping in Redis later wouldn't touch anything
-else in this folder.
+deliberate simplification — it resets on server restart and wouldn't work
+across multiple backend processes — chosen to keep a real database out of
+scope for now. Swapping in Redis later wouldn't touch anything else in
+this folder.
 
 ## Prerequisites
 See the root [README.md](../../README.md) for full setup. In short, this

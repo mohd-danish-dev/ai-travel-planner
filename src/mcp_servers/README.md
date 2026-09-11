@@ -32,8 +32,8 @@ honestly work fine. The reasons MCP exists and is worth learning:
 
 The backend acts as the **MCP client**, discovers these two tools, and
 decides per-query whether to call one, both, or neither — that's the
-"MCP path" / "combined path" in the architecture diagram (see
-[docs/architecture.md](../../docs/architecture.md)).
+"MCP path" / "combined path" in the architecture diagram in the
+[root README](../../README.md#architecture).
 
 ## The tools
 
