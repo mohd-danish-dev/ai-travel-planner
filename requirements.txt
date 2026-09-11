@@ -1,0 +1,28 @@
+
+# --- scraping (scripts/scrape.py) ---
+trafilatura
+playwright
+
+# --- RAG pipeline (scripts/ingest.py, scripts/query.py, src/backend/rag.py) ---
+langchain
+langchain-community
+langchain-huggingface
+sentence-transformers
+faiss-cpu
+python-frontmatter
+tiktoken
+
+# --- MCP servers (src/mcp_servers) + backend MCP client ---
+mcp
+httpx
+python-dotenv
+pycountry
+
+# --- backend (src/backend) ---
+fastapi
+uvicorn[standard]
+langchain-ollama
+
+# --- UI (src/ui) ---
+streamlit
+requests
