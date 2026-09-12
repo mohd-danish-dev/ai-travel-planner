@@ -10,9 +10,13 @@ from langchain_ollama import ChatOllama
 
 import memory
 import rag
+from dotenv import load_dotenv
 from currency_codes import normalize_currency_code
 from mcp_client import MCPToolClients
 from prompts import ANSWER_SYSTEM_PROMPT, ROUTER_SYSTEM_PROMPT
+
+
+load_dotenv()
 
 OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "phi3")
 

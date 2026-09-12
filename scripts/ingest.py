@@ -7,11 +7,12 @@ chunk -> store vectors + text + metadata in a FAISS index on disk.
 Usage:
     python scripts/ingest.py
 """
-
+import os
 from pathlib import Path
 
 import frontmatter
 import tiktoken
+from dotenv import load_dotenv
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
 from langchain_community.vectorstores import FAISS
@@ -20,9 +21,11 @@ from langchain_huggingface import HuggingFaceEmbeddings
 RAW_DOCS_DIR = Path(__file__).resolve().parent.parent / "data" / "raw"
 INDEX_DIR = Path(__file__).resolve().parent.parent / "data" / "vector_store"
 
-EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
-CHUNK_SIZE_TOKENS = 500
-CHUNK_OVERLAP_TOKENS = 50
+load_dotenv()
+
+EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
+CHUNK_SIZE_TOKENS = int(os.getenv("CHUNK_SIZE_TOKENS", "500"))
+CHUNK_OVERLAP_TOKENS = int(os.getenv("CHUNK_OVERLAP_TOKENS", "50"))
 
 _encoding = tiktoken.get_encoding("cl100k_base")
 

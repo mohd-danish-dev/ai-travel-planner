@@ -3,13 +3,17 @@ Loads the FAISS index built by scripts/ingest.py and exposes a simple
 retrieval function for the orchestrator.
 """
 
+import os
 from pathlib import Path
 
+from dotenv import load_dotenv
 from langchain_community.vectorstores import FAISS
 from langchain_huggingface import HuggingFaceEmbeddings
 
+load_dotenv()
+
 INDEX_DIR = Path(__file__).resolve().parent.parent.parent / "data" / "vector_store"
-EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
+EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
 
 _vectorstore: FAISS | None = None
 
