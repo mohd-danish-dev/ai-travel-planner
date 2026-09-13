@@ -55,7 +55,8 @@ Things `pip install` can't do for you:
 - **[Ollama](https://ollama.com)** installed and running locally, with
   the model pulled:
   ```bash
-  ollama pull phi3
+  ollama pull phi3  
+  ollama serve
   ```
 - **A free exchangerate-api.com API key** — sign up at
   [exchangerate-api.com](https://www.exchangerate-api.com) (free tier,

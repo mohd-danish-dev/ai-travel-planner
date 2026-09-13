@@ -4,6 +4,7 @@ synthesize the final labeled answer -> update session memory.
 """
 
 import json
+import logging
 import os
 
 from langchain_ollama import ChatOllama
@@ -17,6 +18,8 @@ from prompts import ANSWER_SYSTEM_PROMPT, ROUTER_SYSTEM_PROMPT
 
 
 load_dotenv()
+
+logger = logging.getLogger(__name__)
 
 OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "phi3")
 
@@ -118,10 +121,14 @@ def format_live_data(live_data: list[dict]) -> str:
 
 
 async def handle_message(session_id: str, message: str, mcp_clients: MCPToolClients) -> dict:
+    logger.info("handle_message: session_id=%s message=%r", session_id, message)
+
     history = memory.get_history(session_id)
+    logger.info("loaded history: %d turn(s)", len(history))
 
     route = classify_intent(message, history)
     intent = route.get("intent", "RAG")
+    logger.info("classified intent: %s route=%s", intent, route)
 
     # Gate on the router's extracted fields directly rather than trusting the
     # top-level "intent" label to always agree with them — a small model can
@@ -129,14 +136,19 @@ async def handle_message(session_id: str, message: str, mcp_clients: MCPToolClie
     # "RAG" for a mixed query. See src/backend/README.md "what we learned".
     kb_chunks: list[dict] = []
     if route.get("rag_query"):
+        logger.info("retrieving RAG context for query=%r", route["rag_query"])
         kb_chunks = rag.retrieve(route["rag_query"], k=4)
+        logger.info("retrieved %d knowledge-base chunk(s)", len(kb_chunks))
 
     live_data: list[dict] = []
     tools_called: list[str] = []
     if route.get("weather_query") or route.get("currency_query"):
+        logger.info("gathering live data via MCP tools")
         live_data, tools_called = await gather_live_data(route, mcp_clients)
+        logger.info("tools called: %s", tools_called)
 
     if not kb_chunks and not live_data:
+        logger.info("no KB or live data; answering from small-talk fallback context")
         answer_context = "The user is making small talk or asking something unrelated to Singapore travel; there is no knowledge-base or live data for this."
     else:
         answer_context = (
@@ -157,10 +169,13 @@ async def handle_message(session_id: str, message: str, mcp_clients: MCPToolClie
         }
     )
 
+    logger.info("invoking answer LLM")
     response = answer_llm.invoke(messages, stop=[CONTEXT_END_MARKER])
     answer = response.content.split(CONTEXT_END_MARKER)[0].strip()
+    logger.info("answer generated (%d chars)", len(answer))
 
     memory.add_turn(session_id, message, answer)
+    logger.info("session memory updated for session_id=%s", session_id)
 
     return {
         "answer": answer,
